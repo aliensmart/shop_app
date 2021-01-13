@@ -12,6 +12,7 @@ class ProductsGrids extends StatelessWidget {
     final productsData = Provider.of<Products>(
         context); //of context is dinamic so we can specify which data it is
     final products = isFavs ? productsData.favItems : productsData.items;
+    // print(isFavs);
     return isFavs
         ? Center(
             child: Text("You don't have favorites"),

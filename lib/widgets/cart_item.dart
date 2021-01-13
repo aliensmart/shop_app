@@ -30,8 +30,33 @@ class CartItem extends StatelessWidget {
         alignment: Alignment.centerRight,
         padding: EdgeInsets.only(right: 20),
       ),
-      direction: DismissDirection.endToStart,
+      direction: DismissDirection
+          .endToStart, //direction to drag the cart and call the onDismissed function;
+      confirmDismiss: (direction) {
+        return showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+                  title: Text('Are you sure?'),
+                  content:
+                      Text('Do you want to delete ${title} from the cart?'),
+                  actions: [
+                    FlatButton(
+                      child: Text('No'),
+                      onPressed: () {
+                        Navigator.of(ctx).pop(false);
+                      },
+                    ),
+                    FlatButton(
+                      child: Text('Yes'),
+                      onPressed: () {
+                        Navigator.of(ctx).pop(true);
+                      },
+                    )
+                  ],
+                )); //showDialog can be used anywhere;
+      },
       onDismissed: (direction) {
+        //onDissmissed is the function that helps us to delete the items from the cart by draggin it to the difined direction;
         Provider.of<Cart>(context, listen: false).removeItem(productId);
       },
       child: Card(
