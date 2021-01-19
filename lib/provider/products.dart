@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'Product.dart';
+import 'product.dart';
 
 class Products with ChangeNotifier {
   List<Product> _items = [
@@ -65,8 +65,30 @@ class Products with ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
-  void addProduct() {
+  void addProduct(Product product) {
+    final newProduct = Product(
+      description: product.description,
+      id: DateTime.now().toString(),
+      title: product.title,
+      imageUrl: product.imageUrl,
+      price: product.price,
+    );
+    _items.add(newProduct);
+    // _items.insert(0, newProduct);
     // _items.add(value);
+    notifyListeners();
+  }
+
+  void updateProduct(String id, Product newProduct) {
+    final prodIndex = _items.indexWhere((prod) => prod.id == id);
+    if (prodIndex >= 0) {
+      _items[prodIndex] = newProduct;
+      notifyListeners();
+    }
+  }
+
+  void deleteProduct(String id) {
+    _items.removeWhere((prod) => prod.id == id);
     notifyListeners();
   }
 }

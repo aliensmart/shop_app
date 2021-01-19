@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../provider/products.dart';
 import '../widgets/user_product_item.dart';
 import '../widgets/app_drawer.dart';
+import '../screens/edit_product_screen.dart';
 
 //this page will show a list of all the user products
 //the user will be able to add, edit and delete his products
@@ -17,7 +18,9 @@ class UserProductsScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(EditProductScreen.routeName);
+            },
           )
         ],
       ),
@@ -31,6 +34,7 @@ class UserProductsScreen extends StatelessWidget {
               UserProductItem(
                 productData.items[i].title,
                 productData.items[i].imageUrl,
+                productData.items[i].id,
               ),
               Divider(),
             ],
