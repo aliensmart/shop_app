@@ -1,43 +1,39 @@
 import 'package:flutter/material.dart';
-import '../provider/product.dart';
+import 'package:provider/provider.dart';
+
+import '../widgets/app_drawer.dart';
 import '../widgets/product_grids.dart';
-import 'package:provider/provider.dart';
-import '../provider/products.dart';
 import '../widgets/badge.dart';
-import 'package:provider/provider.dart';
 import '../provider/cart.dart';
 import './cart_screen.dart';
-import '../widgets/app_drawer.dart';
+import '../provider/products.dart';
 
-enum FilterOption { Favorites, All }
-
-class ProductOverviewScreen extends StatefulWidget {
-  // final List<Product> loadedProducts =
-
-  @override
-  _ProductOverviewScreenState createState() => _ProductOverviewScreenState();
+enum FilterOptions {
+  Favorites,
+  All,
 }
 
-class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
-  var _showFaavoriteOnly = false;
+class ProductsOverviewScreen extends StatefulWidget {
+  @override
+  _ProductsOverviewScreenState createState() => _ProductsOverviewScreenState();
+}
+
+class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
+  var _showOnlyFavorites = false;
   var _isInit = true;
   var _isLoading = false;
 
   @override
   void initState() {
-    // Provider.of<Products>(context).fetchAndSetProducts(); //this won't work
-    // TODO: implement initState
-
-    //we can do
+    // Provider.of<Products>(context).fetchAndSetProducts(); // WON'T WORK!
     // Future.delayed(Duration.zero).then((_) {
     //   Provider.of<Products>(context).fetchAndSetProducts();
-    // });//but kind of a hack
+    // });
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     if (_isInit) {
       setState(() {
         _isLoading = true;
@@ -56,47 +52,46 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Raaga'),
-        actions: [
+        title: Text('MyShop'),
+        actions: <Widget>[
           PopupMenuButton(
-            onSelected: (FilterOption selectedValue) {
-              print(selectedValue);
-              if (selectedValue == FilterOption.Favorites) {
-                //..
-                setState(() {
-                  _showFaavoriteOnly = true;
-                });
-              } else {
-                //...
-                setState(() {
-                  _showFaavoriteOnly = false;
-                });
-              }
+            onSelected: (FilterOptions selectedValue) {
+              setState(() {
+                if (selectedValue == FilterOptions.Favorites) {
+                  _showOnlyFavorites = true;
+                } else {
+                  _showOnlyFavorites = false;
+                }
+              });
             },
             icon: Icon(
               Icons.more_vert,
             ),
             itemBuilder: (_) => [
-              PopupMenuItem(
-                child: Text("only Favorites"),
-                value: FilterOption.Favorites,
-              ),
-              PopupMenuItem(
-                child: Text("Show All"),
-                value: FilterOption.All,
-              ),
-            ],
+                  PopupMenuItem(
+                    child: Text('Only Favorites'),
+                    value: FilterOptions.Favorites,
+                  ),
+                  PopupMenuItem(
+                    child: Text('Show All'),
+                    value: FilterOptions.All,
+                  ),
+                ],
           ),
           Consumer<Cart>(
-            builder: (_, cartData, ch) =>
-                Badge(child: ch, value: cartData.itemCount.toString()),
+            builder: (_, cart, ch) => Badge(
+                  child: ch,
+                  value: cart.itemCount.toString(),
+                ),
             child: IconButton(
-              icon: Icon(Icons.shopping_cart),
+              icon: Icon(
+                Icons.shopping_cart,
+              ),
               onPressed: () {
                 Navigator.of(context).pushNamed(CartScreen.routeName);
               },
             ),
-          )
+          ),
         ],
       ),
       drawer: AppDrawer(),
@@ -104,7 +99,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : ProductsGrids(_showFaavoriteOnly),
+          : ProductsGrid(_showOnlyFavorites),
     );
   }
 }

@@ -32,7 +32,7 @@ class Cart with ChangeNotifier {
     return total;
   }
 
-  void addItem(String productId, double price, String title) {
+  void addItem(String productId, double price, String title,) {
     if (_items.containsKey(productId)) {
       //change quantity;
       _items.update(
